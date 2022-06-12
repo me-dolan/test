@@ -1,3 +1,3 @@
 port: ":8080"
 mongoUrl: "mongodb://localhost:27017/"
-secretKey: "s13gs51"
+secretKey: "my_secret"

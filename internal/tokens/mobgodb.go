@@ -1,4 +1,4 @@
-package token
+package tokens
 
 import (
 	"context"
@@ -13,8 +13,8 @@ func (t *Tokens) creatDb(u user.User, at AuthTokens) error {
 	if err != nil {
 		return err
 	}
-
 	collection := t.db.Database("UserSession").Collection("session")
+
 	var session Session
 	session.User = u
 	session.RefreshToken, err = HashToken(at.RefreshToken)
@@ -31,12 +31,12 @@ func (t *Tokens) creatDb(u user.User, at AuthTokens) error {
 	return nil
 }
 
-func (t *Tokens) checkDb(refreshToken, guid string) (bool, error) {
+func (t *Tokens) checkDb(refreshToken string, guid string) (bool, error) {
 	err := t.db.Ping(context.Background(), nil)
 	if err != nil {
 		return false, err
 	}
-	collection := t.db.Database("UserSession").Collection("Session")
+	collection := t.db.Database("UserSession").Collection("session")
 	if err != nil {
 		return false, err
 	}
@@ -47,14 +47,14 @@ func (t *Tokens) checkDb(refreshToken, guid string) (bool, error) {
 	defer cursor.Close(context.Background())
 
 	for cursor.Next(context.Background()) {
-		var epispde bson.M
-		if err = cursor.Decode(&epispde); err != nil {
-			return false, nil
+		var episode bson.M
+		if err = cursor.Decode(&episode); err != nil {
+			return false, err
 		}
-		str := fmt.Sprintf("%v", epispde["refreshtoken"])
+		str := fmt.Sprintf("%v", episode["refreshtoken"])
 		res := CheckTokenHash(refreshToken, str)
 		if res {
-			id := epispde["_id"]
+			id := episode["_id"]
 			_, err := collection.DeleteOne(context.Background(), bson.M{"_id": id})
 			if err != nil {
 				return false, nil

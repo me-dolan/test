@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
-	config "github.com/me-dolan/test/internal/config"
+	"github.com/me-dolan/test/internal/config"
+	"github.com/me-dolan/test/internal/tokens"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -37,7 +37,11 @@ func main() {
 	}
 
 	// server
-	r := gin.Default()
-	fmt.Println("Сервер запущен на порте 8080")
-	r.Run(config.Port)
+	token := tokens.NewToken(mongoCient, config.SecretKey)
+
+	router := gin.Default()
+	handler := tokens.NewHandler(token)
+	handler.Register(router)
+	//fmt.Println("Сервер запущен на порте: ", config.Port)
+	router.Run(config.Port)
 }

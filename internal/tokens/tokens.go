@@ -1,4 +1,4 @@
-package token
+package tokens
 
 import (
 	"encoding/base64"
@@ -15,9 +15,16 @@ type Tokens struct {
 	SecretKey string
 }
 
+func NewToken(db *mongo.Client, secretKey string) *Tokens {
+	return &Tokens{
+		db:        db,
+		SecretKey: secretKey,
+	}
+}
+
 type AuthTokens struct {
-	AccesToken   string
-	RefreshToken string
+	AccesToken   string `json:"acces_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 type AuthTokenClaim struct {
@@ -26,23 +33,22 @@ type AuthTokenClaim struct {
 }
 
 func (t *Tokens) generateTokens(guid string) (AuthTokens, user.User, error) {
-	var u user.User
-	token := jwt.NewWithClaims(jwt.SigningMethodES512, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(time.Minute * 1).Unix(),
-	})
+	var user user.User
+	user.Guid = guid
+	
+	expiresAt := time.Now().Add(time.Minute * 1).Unix()
 
-	// token := jwt.New(jwt.SigningMethodHS512) // SHA512
-	// expiresAt := time.Now().Add(time.Minute * 1).Unix()
-	// token.Claims = &AuthTokenClaim{
-	// 	&jwt.StandardClaims{
-	// 		ExpiresAt: expiresAt,
-	// 	},
-	// 	u,
-	// }
+	token := jwt.New(jwt.SigningMethodHS512) // SHA512
+	token.Claims = &AuthTokenClaim{
+		&jwt.StandardClaims{
+			ExpiresAt: expiresAt,
+		},
+		user,
+	}
 
 	tokenString, err := token.SignedString([]byte(t.SecretKey))
 	if err != nil {
-		return AuthTokens{}, u, err
+		return AuthTokens{}, user, err
 	}
 
 	refreshToken := uuid.New()
@@ -51,5 +57,5 @@ func (t *Tokens) generateTokens(guid string) (AuthTokens, user.User, error) {
 	return AuthTokens{
 		AccesToken:   tokenString,
 		RefreshToken: refreshTokenBase64,
-	}, u, nil
+	}, user, nil
 }
