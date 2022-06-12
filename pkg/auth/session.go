@@ -1,6 +1,6 @@
 package auth
 
 type Session struct {
-	RefreshToken string
+	RefreshToken string `json:"refreshToken" bson:"refreshToken"`
 	User         User
 }

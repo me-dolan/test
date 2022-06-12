@@ -7,7 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	config "github.com/me-dolan/test/internal/config"
-	"github.com/me-dolan/test/pkg/database"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 //var pathConfig = "./config/config.yaml"
@@ -24,8 +25,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	// mongo
-	mongoCient, err := database.NewClient(config.MongoUrl)
+	mongoCient, err := mongo.NewClient(options.Client().ApplyURI(config.MongoUrl))
 	if err != nil {
 		panic(err)
 	}
@@ -33,6 +35,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	// server
 	r := gin.Default()
 	fmt.Println("Сервер запущен на порте 8080")
