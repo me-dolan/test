@@ -1,4 +1,4 @@
-package auth
+package token
 
 import (
 	"encoding/base64"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
+	"github.com/me-dolan/test/internal/user"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -21,11 +22,11 @@ type AuthTokens struct {
 
 type AuthTokenClaim struct {
 	*jwt.StandardClaims
-	User User
+	User user.User
 }
 
-func (t *Tokens) generateTokens(guid string) (AuthTokens, User, error) {
-	var u User
+func (t *Tokens) generateTokens(guid string) (AuthTokens, user.User, error) {
+	var u user.User
 	token := jwt.NewWithClaims(jwt.SigningMethodES512, jwt.StandardClaims{
 		ExpiresAt: time.Now().Add(time.Minute * 1).Unix(),
 	})

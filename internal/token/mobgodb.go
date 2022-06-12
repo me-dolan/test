@@ -1,13 +1,14 @@
-package auth
+package token
 
 import (
 	"context"
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"github.com/me-dolan/test/internal/user"
 )
 
-func (t *Tokens) creatDb(u User, at AuthTokens) error {
+func (t *Tokens) creatDb(u user.User, at AuthTokens) error {
 	err := t.db.Ping(context.Background(), nil)
 	if err != nil {
 		return err
