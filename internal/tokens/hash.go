@@ -3,8 +3,8 @@ package tokens
 import "golang.org/x/crypto/bcrypt"
 
 func HashToken(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(hash), err
 }
 
 func CheckTokenHash(token, hash string) bool {

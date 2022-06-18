@@ -15,7 +15,6 @@ func (th *TokenHandler) RefreshMiddleware(next gin.HandlerFunc) gin.HandlerFunc 
 			ctx.AbortWithStatusJSON(500, "Server err")
 			return
 		}
-
 		if ok {
 			next(ctx)
 		} else {

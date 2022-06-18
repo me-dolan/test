@@ -6,7 +6,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
-	"github.com/me-dolan/test/internal/user"
+	"github.com/me-dolan/test/internal/domain"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -29,13 +29,14 @@ type AuthTokens struct {
 
 type AuthTokenClaim struct {
 	*jwt.StandardClaims
-	User user.User
+	User domain.User
 }
 
-func (t *Tokens) generateTokens(guid string) (AuthTokens, user.User, error) {
-	var user user.User
+func (t *Tokens) generateTokens(guid string) (AuthTokens, domain.User, error) {
+	var user domain.User
 	user.Guid = guid
-	
+	user.RefreshToken = ""
+
 	expiresAt := time.Now().Add(time.Minute * 1).Unix()
 
 	token := jwt.New(jwt.SigningMethodHS512) // SHA512

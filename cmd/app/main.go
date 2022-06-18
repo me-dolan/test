@@ -11,7 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-//var pathConfig = "./config/config.yaml"
+// var pathConfig = "./config/config.yaml"
+
 var pathConfig string
 
 func init() {
