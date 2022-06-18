@@ -27,7 +27,7 @@ import (
 // 		if err != nil {
 // 			return err
 // 		}
-// 		//  else { // it's work
+// 		//  else { 
 // 		// 	filter := bson.D{{"guid", u.Guid}}
 // 		// 	update := bson.D{
 // 		// 		{"$set", bson.M{
@@ -41,7 +41,7 @@ import (
 // 		// 		return err
 // 		// 	}
 // 		// }
-// 	} else { // it's work
+// 	} else {
 // 		filter := bson.D{{"guid", u.Guid}}
 // 		update := bson.D{
 // 			{"$set", bson.M{
@@ -84,26 +84,6 @@ func (t *Tokens) creatDb(u domain.User, at AuthTokens) error {
 
 	return nil
 }
-
-// func (t *Tokens) creatDb(u domain.User, at AuthTokens) (error) {
-// 	err := t.db.Ping(context.Background(), nil)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	collection := t.db.Database("UserSession").Collection("session")
-
-// 	u.Session.RefreshToken, err = HashToken(at.RefreshToken)
-// 	fmt.Println(u.Session.RefreshToken)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	_, err = collection.InsertOne(context.Background(), u)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
 
 func (t *Tokens) checkDb(refreshToken string, guid string) (bool, error) {
 	err := t.db.Ping(context.Background(), nil)
@@ -165,24 +145,3 @@ func (t *Tokens) refreshDbToken(u domain.User, at AuthTokens) error {
 
 	return nil
 }
-
-// 	// for cursor.Next(context.Background()) {
-// 	// 	var episode domain.User
-// 	// 	if err = cursor.Decode(&episode); err != nil {
-// 	// 		return false, err
-// 	// 	}
-// 	// 	//query := bson.M{"session": bson.M{"refreshtoken": refreshToken}}
-// 	// 	str := fmt.Sprintf("%v", episode.Session.RefreshToken == refreshToken)
-// 	// 	res := CheckTokenHash(refreshToken, str)
-// 	// 	if res {
-// 	// 		guid := episode.Guid
-// 	// 		_, err := collection.DeleteOne(context.Background(), bson.M{"guid": guid})
-// 	// 		if err != nil {
-// 	// 			return false, nil
-// 	// 		}
-// 	// 		return true, nil
-// 	// 	}
-
-// 	// }
-// 	return false, nil
-// }
